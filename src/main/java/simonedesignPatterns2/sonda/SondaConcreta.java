@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import simonedesignPatterns2.centroControllo.Osservatore;
+import simonedesignPatterns2.exceptions.LivelloFumoInvalidoException;
+import simonedesignPatterns2.exceptions.OsservatoreDuplicatoException;
+import simonedesignPatterns2.exceptions.OsservatoreNonTrovatoException;
 
 public class SondaConcreta implements Sonda {
 	private String id;
@@ -36,22 +39,34 @@ public class SondaConcreta implements Sonda {
 		return livelloFumo;
 	}
 
-	public void setLivelloFumo(int livelloFumo) {
+	public void setLivelloFumo(int livelloFumo) throws LivelloFumoInvalidoException {
+		if (livelloFumo < 0) {
+			throw new LivelloFumoInvalidoException("Il livello di fumo non può essere negativo.");
+		}
 		this.livelloFumo = livelloFumo;
 		notificaOsservatori();
 	}
 
-	public void aggiungiOsservatore(Osservatore osservatore) {
+	public void aggiungiOsservatore(Osservatore osservatore) throws OsservatoreDuplicatoException {
+		if (osservatori.contains(osservatore)) {
+			throw new OsservatoreDuplicatoException("L'osservatore è già stato aggiunto.");
+		}
 		osservatori.add(osservatore);
 	}
 
-	public void rimuoviOsservatore(Osservatore osservatore) {
-		osservatori.remove(osservatore);
+	public void rimuoviOsservatore(Osservatore osservatore) throws OsservatoreNonTrovatoException {
+		if (!osservatori.remove(osservatore)) {
+			throw new OsservatoreNonTrovatoException("L'osservatore non è stato trovato.");
+		}
 	}
 
 	public void notificaOsservatori() {
 		for (Osservatore o : osservatori) {
-			o.aggiorna(this);
+			try {
+				o.aggiorna(this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

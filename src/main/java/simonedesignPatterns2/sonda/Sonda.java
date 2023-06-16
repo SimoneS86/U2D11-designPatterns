@@ -1,6 +1,9 @@
 package simonedesignPatterns2.sonda;
 
 import simonedesignPatterns2.centroControllo.Osservatore;
+import simonedesignPatterns2.exceptions.LivelloFumoInvalidoException;
+import simonedesignPatterns2.exceptions.OsservatoreDuplicatoException;
+import simonedesignPatterns2.exceptions.OsservatoreNonTrovatoException;
 
 public interface Sonda {
 	public String getId();
@@ -11,11 +14,11 @@ public interface Sonda {
 
 	public int getLivelloFumo();
 
-	public void setLivelloFumo(int livelloFumo);
+	public void setLivelloFumo(int livelloFumo) throws LivelloFumoInvalidoException;
 
-	public void aggiungiOsservatore(Osservatore osservatore);
+	public void aggiungiOsservatore(Osservatore osservatore) throws OsservatoreDuplicatoException;
 
-	public void rimuoviOsservatore(Osservatore osservatore);
+	public void rimuoviOsservatore(Osservatore osservatore) throws OsservatoreNonTrovatoException;
 
 	public void notificaOsservatori();
 }
